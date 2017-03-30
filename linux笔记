@@ -4,3 +4,8 @@ linux 笔记
 /etc/profile export LANG="zh_CN.UTF-8"
 /etc/sysconfig/i18n 
 source 生效
+
+翻墙工具
+1，赛风 psiphon
+2，netpas
+3，蓝灯
