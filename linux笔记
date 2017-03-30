@@ -5,6 +5,10 @@ linux 笔记
 /etc/sysconfig/i18n 
 source 生效
 
+设置别名
+ ~/.bashrc 
+ alias data='ls -a'
+ 
 翻墙工具
 1，赛风 psiphon
 2，netpas
