@@ -1,0 +1,6 @@
+20170330
+linux 笔记
+修改中文编码
+/etc/profile export LANG="zh_CN.UTF-8"
+/etc/sysconfig/i18n 
+source 生效
