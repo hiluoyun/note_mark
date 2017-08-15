@@ -1,0 +1,23 @@
+2017/8/15
+gcc
+gcc -c test.c -o test.o
+gcc test.c -o test
+gcc test.o -o test -lthread              #使用动态链接库
+gcc –c –I /usr/dev/mysql/include test.c –o test.o
+gcc –L /usr/dev/mysql/lib –lmysqlclient test.o –o test      
+gcc –L /usr/dev/mysql/lib –static –lmysqlclient test.o –o test  #使用静态库
+gcc -MM test.c                           #查看test.c的依赖关系
+
+ar rcs libhello.a hello.o          #生成静态链接库
+gcc test.c -fPIC -shared -o libtest.so   #生成动态链接库
+
+C
+stat文件结构体
+strdup函数：给一个字符串分配内存
+va_list: 可变参数
+printf 从右边往走
+声明即初始化char *s 和char s[]  第一个 栈区  第二个常量区
+高级用法： C语言：
+offsetof 求结构体变量偏移
+container_of 根据结构体变量求结构体首地址
+
