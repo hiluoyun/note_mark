@@ -9,7 +9,7 @@ gcc –L /usr/dev/mysql/lib –static –lmysqlclient test.o –o test  #使用�
 gcc -MM test.c                           #查看test.c的依赖关系
 
 ar rcs libhello.a hello.o          #生成静态链接库
-gcc test.c -fPIC -shared -o libtest.so   #生成动态链接库
+> gcc test.c -fPIC -shared -o libtest.so   #生成动态链接库
 
 C
 stat文件结构体
