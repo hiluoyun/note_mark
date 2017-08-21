@@ -1,0 +1,8 @@
+1）使用which命令查看ls命令的位置，如下：
+which ls # 输出：/bin/ls
+
+2）使用dpkg命令查询ls命令所属的包，如下：
+dpkg -S /bin/ls # 输出：coreutils: /bin/ls
+
+3）使用apt-get命令来下载ls命令所在的包的源代码，如下：（也可以去官网下载）
+apt-get source coreutils
