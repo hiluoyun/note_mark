@@ -21,3 +21,13 @@ printf 从右边往走
 offsetof 求结构体变量偏移
 container_of 根据结构体变量求结构体首地址
 
+shell并行执行命令
+
+#!/bin/bash  
+for(( i = 0; i < 10; i++ ))  
+do  
+{  
+        commands1  
+}&  
+done  
+wait  
