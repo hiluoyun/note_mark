@@ -1,16 +1,91 @@
 2017/8/15
+-------------------------------------GCC-----------------------------------
 gcc
 gcc -c test.c -o test.o
 gcc test.c -o test
 gcc test.o -o test -lthread              #使用动态链接库
-gcc –c –I /usr/dev/mysql/include test.c –o test.o
+gcc –c –I /usr/dev/mysql/include test.c –o test.o # -I 是指定头文件目标
 gcc –L /usr/dev/mysql/lib –lmysqlclient test.o –o test      
 gcc –L /usr/dev/mysql/lib –static –lmysqlclient test.o –o test  #使用静态库
 gcc -MM test.c                           #查看test.c的依赖关系
 
-ar rcs libhello.a hello.o          #生成静态链接库
-> gcc test.c -fPIC -shared -o libtest.so   #生成动态链接库
 
+2017/9/8
+------------------------------- .so && .a----------------------------------------
+1，动态连接库：
+生成：
+>gcc -c -fPIC test.c -o test.o  #需要添加 -fPIC 为生成so做准备
+>gcc test.o  -fPIC -shared -o libtest.so 
+或：
+> gcc test.c -fPIC -shared -o libtest.so   #生成动态链接库
+-fPIC : 位置无关性
+-shared : 告诉编译器生成共享库so
+
+查看属性：
+nm -D libtest.so   #查看so包含的函数
+ldd libtest.so #查看so的依赖关系
+
+使用：(系统默认会去 /usr/lib  && /lib 寻找so)
+我们可以使用 -L 指定当前链接目录
+gcc -L. main.c -o mian -ltest   # -L.表示当前目录
+
+
+2，静态链接库：
+生成：ar rcs libhello.a libhello.o   test1.o  test2.o
+
+查看属性：
+ ar -tv test.a   #查看包含的.o文件
+ ar -x test.a    #解压test.a 
+ nm libhello.a   #查看函数
+
+使用：
+gcc test.c -static ./libhello.a test #绝对路径
+或：
+gcc test.c -static -lhello test   #默认配置路径
+-static : 执行gcc静态链接
+
+
+-------------------------------- 进阶使用--------------------------------------
+##配置共享库路径：
+1. cp so文件到/lib && /usr/lib  ,最后 ldconfig 生效
+2. 配置共享库新目录，修改/etc/ld.so.conf，最后 ldconfig 生效
+3，LD_LIBRARY_PATH（链接时） 和 LD_LIBRARY_PATH（编译时） 临时制定，（当前shell有效）
+4，LD_PRELOAD 优先级最高的加载方式，慎用
+
+##共享库和静态库的依赖关系
+静态库： 静态库指将所有相关的目标文件打包成为一个单独的文件-即静态库文件，以.a结尾。
+        静态库可作为链接器的输入，链接器会将程序中使用的到函数的代码从库文件中拷贝到应用程序中。
+        一旦链接完成，在执行程序的时候就不需要静态库了。
+共享库： 共享库是一个目标模块(.so），在运行时，可以加载到任意的存储器地址，
+        并和一个在存储器中的程序链接起来，这个过程称为动态链接，是由动态链接器ld.so来执行的。
+example:(共享库的多重依赖)
+        liba.so libb.so libc.so test.c
+依赖关系：liba.so -> libb.so -> libc.so   #(a依赖b,b依赖c）  
+test.c :调用了liba.so中的函数
+编译： gcc -c test.c -o test.o -L. -la  #编译阶段只需要链接liba.c
+链接： gcc test.o -o test -la -lb -lc 
+
+##编译程序混用 .so 和 .a
+>gcc test.c -L. -Wl,-Bstatic -ltestlib  -Wl,-Bdynamic -ltestlib
+-Wl,-Bstatic : 静态链接，下面详解
+-Wl,-Bdynamic : 动态库链接
+
+##gcc 高级选项
+-Wl,rpath：指定链接路径，和 -L的区别： -L只是指示编译时的路径，链接时，可能找不到路径， -Wl,rpath可以记住链接库的位置
+想应的还有： -Wl,rpath-link
+
+-Wl,-soname
+gcc -fPIC -shared -Wl,-soname,libto.so.1 -o libto.so.1.2 to.c  
+详情：
+http://blog.csdn.net/zhoujiaxq/article/details/10213655
+
+gcc选项全面解析：
+http://www.cnblogs.com/LiuYanYGZ/p/5548855.html
+
+-------------------------------- autoconf && automake ------------------------------
+
+
+----------------------------------------------不一样的C--------------------------------
 C
 stat文件结构体
 strdup函数：给一个字符串分配内存
