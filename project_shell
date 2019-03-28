@@ -1,0 +1,22 @@
+#!/bin/sh
+db_user=root
+db_pass='?bvr_A8#hR@G'
+db_name=betfunprod
+db_dir='/root/mysql_bak_gz'
+
+if [ ! -d "${db_dir}" ];then
+    mkdir ${db_dir}
+fi
+cd ${db_dir}
+echo "You are in ${db_dir}"
+# mv backup* /oldbackup
+# echo "Old dbs are moved to oldbackup folder"
+# File = backup-`date '+%m-%d-%Y'`-$Now.sql
+mysqldump -u$db_user -p${db_pass} $db_name | gzip > ${db_name}-`date '+%Y-%m-%d-%H-%M-%S'`.sql.gz
+echo "Your database backup successfully completed"
+
+sleep 1
+echo "start check expire dumps..."
+
+find $db_dir -name $db_name"*.sql.gz" -type f -mtime +30 -exec rm -rf {} \; > /dev/null 2>&1
+echo "clean up success"
